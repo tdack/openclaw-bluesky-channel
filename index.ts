@@ -1,11 +1,18 @@
-import { defineChannelPluginEntry } from "openclaw/plugin-sdk/core";
+import {
+  emptyPluginConfigSchema,
+  type OpenClawPluginApi,
+  type OpenClawPluginDefinition,
+} from "openclaw/plugin-sdk/core";
 import { blueskyPlugin } from "./src/channel.js";
 import { setBlueskyRuntime } from "./src/runtime.js";
 
-export default defineChannelPluginEntry({
+const plugin: OpenClawPluginDefinition = {
   id: "bluesky",
-  name: "Bluesky",
-  description: "Bluesky DM channel plugin for OpenClaw",
-  plugin: blueskyPlugin,
-  setRuntime: setBlueskyRuntime,
-});
+  configSchema: emptyPluginConfigSchema(),
+  register(api: OpenClawPluginApi) {
+    setBlueskyRuntime(api.runtime);
+    api.registerChannel(blueskyPlugin);
+  },
+};
+
+export default plugin;
