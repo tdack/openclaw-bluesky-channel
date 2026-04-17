@@ -2,6 +2,16 @@
   "name": "openclaw-bluesky",
   "version": "2026.4.15",
   "description": "Bluesky DM channel plugin for OpenClaw",
+  "author": "Troy Dack <troy@dack.com.au>",
+  "license": "MIT",
+  "homepage": "https://github.com/tdack/openclaw-bluesky",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tdack/openclaw-bluesky.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tdack/openclaw-bluesky/issues"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "exports": {
