@@ -3,6 +3,7 @@ import {
   formatPairingApproveHint,
   type ChannelPlugin,
 } from "openclaw/plugin-sdk/channel-plugin-common";
+import { buildBaseAccountStatusSnapshot } from "openclaw/plugin-sdk/status-helpers";
 import {
   listBlueskyAccountIds,
   resolveBlueskyAccount,
@@ -147,19 +148,8 @@ export const blueskyPlugin: ChannelPlugin<ResolvedBlueskyAccount> = {
   },
 
   status: {
-    buildAccountSnapshot: ({ account, runtime }) => ({
-      accountId: account.accountId,
-      name: account.name,
-      handle: account.handle,
-      enabled: account.enabled,
-      configured: account.configured,
-      running: runtime?.running ?? false,
-      lastStartAt: runtime?.lastStartAt ?? null,
-      lastStopAt: runtime?.lastStopAt ?? null,
-      lastError: runtime?.lastError ?? null,
-      lastInboundAt: runtime?.lastInboundAt ?? null,
-      lastOutboundAt: runtime?.lastOutboundAt ?? null,
-    }),
+    buildAccountSnapshot: ({ account, runtime }) =>
+      buildBaseAccountStatusSnapshot({ account, runtime }, { handle: account.handle }),
   },
 
   gateway: {
@@ -191,12 +181,20 @@ export const blueskyPlugin: ChannelPlugin<ResolvedBlueskyAccount> = {
       log?.info?.(`Bluesky [${account.accountId}]: authenticated as ${selfDid}`);
       activeAgents.set(account.accountId, agent);
 
+      const now = Date.now();
+      ctx.setStatus({ accountId: account.accountId, connected: true, lastConnectedAt: now });
+
       await runBlueSkyPollLoop({
         agent,
         selfDid,
         abortSignal,
         callbacks: {
           onMessage: async (msg) => {
+            ctx.setStatus({
+              accountId: account.accountId,
+              lastInboundAt: Date.now(),
+              lastEventAt: Date.now(),
+            });
             // Re-read config each turn so live config changes take effect
             const currentCfg = getBlueskyRuntime().config.loadConfig();
             await dispatchBlueskyInboundTurn({
@@ -209,6 +207,7 @@ export const blueskyPlugin: ChannelPlugin<ResolvedBlueskyAccount> = {
           },
           onError: (err, context) => {
             log?.error?.(`Bluesky [${account.accountId}]: error in ${context} — ${err.message}`);
+            ctx.setStatus({ accountId: account.accountId, lastError: err.message });
           },
         },
       });
