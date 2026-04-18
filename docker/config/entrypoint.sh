@@ -16,7 +16,7 @@ if [ ! -f "$PLUGIN_MARKER" ]; then
 
   echo "Installing openclaw-bluesky plugin..."
   # Specify version to bypass ClawHub routing (bare name resolves as a skill there)
-  openclaw plugins install "openclaw-bluesky@2026.4.15"
+  openclaw plugins install "openclaw-bluesky-channel@2026.4.18"
 
   touch "$PLUGIN_MARKER"
   echo "Plugin installed."

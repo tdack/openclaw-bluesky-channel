@@ -1,11 +1,11 @@
-# openclaw-bluesky
+# openclaw-bluesky-channel
 
 Bluesky DM channel plugin for [OpenClaw](https://openclaw.ai), powered by the AT Protocol chat API.
 
 ## Installation
 
 ```bash
-openclaw plugins install openclaw-bluesky
+openclaw plugins install openclaw-bluesky-channel-channel
 ```
 
 ## Configuration

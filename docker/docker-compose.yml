@@ -1,20 +1,12 @@
 services:
   openclaw:
-    image: node:22-slim
-    # host networking so the container can reach debian-2.local via mDNS
+    build: .
     network_mode: host
     env_file: .env
     environment:
       - NODE_OPTIONS=--max-old-space-size=512
     volumes:
-      - ./config:/config:ro
       - openclaw-data:/root/.openclaw
-    entrypoint: ["/bin/sh", "-c"]
-    command:
-      - |
-        apt-get update -qq && apt-get install -y -qq gettext-base > /dev/null
-        npm install -g openclaw --silent
-        sh /config/entrypoint.sh
     restart: unless-stopped
 
 volumes:
