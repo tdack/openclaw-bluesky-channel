@@ -1,0 +1,81 @@
+{
+  "models": {
+    "providers": {
+      "ollama": {
+        "baseUrl": "${OLLAMA_BASE_URL}",
+        "api": "ollama",
+        "apiKey": "ollama-local",
+        "models": [
+          {
+            "id": "${OLLAMA_MODEL}",
+            "name": "ollama-default",
+            "reasoning": true,
+            "input": ["text"],
+            "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+            "contextWindow": 131072,
+            "maxTokens": 8192
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/${OLLAMA_MODEL}"
+      },
+      "workspace": "/root/.openclaw/workspace"
+    },
+    "list": [
+      {
+        "id": "bluesky_bot",
+        "default": true,
+        "name": "BlueskyBot",
+        "workspace": "/root/.openclaw/workspace-bluesky_bot",
+        "agentDir": "/root/.openclaw/agents/bluesky_bot/agent",
+        "identity": {
+          "name": "BlueskyBot",
+          "theme": "AI Assistant",
+          "emoji": "🦋"
+        }
+      }
+    ]
+  },
+  "bindings": [
+    {
+      "agentId": "bluesky_bot",
+      "match": {
+        "channel": "bluesky",
+        "accountId": "bot"
+      }
+    }
+  ],
+  "channels": {
+    "bluesky": {
+      "pdsUrl": "${BLUESKY_PDS_URL}",
+      "enabled": true,
+      "accounts": {
+        "bot": {
+          "handle": "${BLUESKY_HANDLE}",
+          "appPassword": "${BLUESKY_APP_PASSWORD}"
+        }
+      }
+    }
+  },
+  "plugins": {
+    "entries": {
+      "bluesky": {
+        "enabled": true,
+        "config": {}
+      },
+      "ollama": {
+        "enabled": true
+      }
+    }
+  },
+  "gateway": {
+    "port": 18790,
+    "mode": "local",
+    "bind": "loopback"
+  }
+}
