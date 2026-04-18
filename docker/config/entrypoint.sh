@@ -3,20 +3,28 @@ set -e
 
 CONFIG_DIR=/root/.openclaw
 CONFIG_FILE=$CONFIG_DIR/openclaw.json
+PLUGIN_MARKER=$CONFIG_DIR/.bluesky-plugin-installed
 
 mkdir -p "$CONFIG_DIR"
 
-# Generate config from template on every start so env var changes take effect
-envsubst < /config/openclaw.json.tmpl > "$CONFIG_FILE"
-echo "Config written to $CONFIG_FILE"
+# Install the bluesky plugin if not already done.
+# Use a minimal bootstrap config first to avoid chicken-and-egg: the full
+# config references the bluesky channel which requires the plugin to exist.
+if [ ! -f "$PLUGIN_MARKER" ]; then
+  echo "Writing bootstrap config for plugin install..."
+  envsubst < /config/openclaw.bootstrap.json.tmpl > "$CONFIG_FILE"
 
-# Install plugin if not already installed
-if ! openclaw plugins list 2>/dev/null | grep -q "openclaw-bluesky"; then
   echo "Installing openclaw-bluesky plugin..."
-  openclaw plugins install openclaw-bluesky
-else
-  echo "openclaw-bluesky plugin already installed"
+  # Specify version to bypass ClawHub routing (bare name resolves as a skill there)
+  openclaw plugins install "openclaw-bluesky@2026.4.15"
+
+  touch "$PLUGIN_MARKER"
+  echo "Plugin installed."
 fi
+
+# Write full config (overwrites bootstrap)
+echo "Writing full config..."
+envsubst < /config/openclaw.json.tmpl > "$CONFIG_FILE"
 
 echo "Starting OpenClaw gateway..."
 exec openclaw gateway run --bind loopback --port 18790
