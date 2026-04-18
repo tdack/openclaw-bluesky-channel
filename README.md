@@ -5,7 +5,7 @@ Bluesky DM channel plugin for [OpenClaw](https://openclaw.ai), powered by the AT
 ## Installation
 
 ```bash
-openclaw plugins install openclaw-bluesky-channel-channel
+openclaw plugins install openclaw-bluesky-channel
 ```
 
 ## Configuration
