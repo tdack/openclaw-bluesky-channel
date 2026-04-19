@@ -1,6 +1,6 @@
 {
   "name": "openclaw-bluesky-channel",
-  "version": "2026.4.18",
+  "version": "2026.4.18.1",
   "description": "Bluesky DM channel plugin for OpenClaw",
   "author": "Troy Dack <troy@dack.com.au>",
   "license": "MIT",
@@ -42,10 +42,18 @@
     "typescript": "^5.7.0",
     "vitest": "^3.0.0"
   },
+  "build": {
+    "openclawVersion": "2026.4.14",
+    "pluginSDKVersion": "2026.4.14"
+  },
   "openclaw": {
     "extensions": [
       "./dist/index.js"
     ],
+    "compat": {
+      "pluginApi": ">=2026.4.14",
+      "minGatewayVersion": "2026.4.14"
+    },
     "channel": {
       "id": "bluesky",
       "label": "Bluesky",
