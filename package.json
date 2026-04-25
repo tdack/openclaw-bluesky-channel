@@ -1,6 +1,6 @@
 {
   "name": "openclaw-bluesky-channel",
-  "version": "2026.4.18.1",
+  "version": "2026.4.18.2",
   "description": "Bluesky DM channel plugin for OpenClaw",
   "author": "Troy Dack <troy@dack.com.au>",
   "license": "MIT",
