@@ -8,5 +8,15 @@
     "type": "object",
     "additionalProperties": false,
     "properties": {}
+  },
+   "channelConfigs": {
+    "bluesky": {
+      "label": "Bluesky",
+      "schema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      }
+    }
   }
 }
