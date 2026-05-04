@@ -16,6 +16,11 @@ import { getBlueskyRuntime, setBlueskyRuntime } from "./runtime.js";
 import { sendBlueskyMessage } from "./send.js";
 import { blueskySetupAdapter, blueskySetupWizard } from "./setup-surface.js";
 import type { ResolvedBlueskyAccount } from "./types.js";
+import {
+  matchesMentionWithExplicit,
+  implicitMentionKindWhen,
+  resolveInboundMentionDecision,
+} from "openclaw/plugin-sdk/channel-inbound";
 
 export { setBlueskyRuntime };
 
@@ -87,14 +92,10 @@ export const blueskyPlugin: ChannelPlugin<ResolvedBlueskyAccount> = {
 
   config: {
     listAccountIds: (cfg) => listBlueskyAccountIds(cfg as Record<string, unknown>),
-
     resolveAccount: (cfg, accountId) =>
       resolveBlueskyAccount(cfg as Record<string, unknown>, accountId),
-
     defaultAccountId: (cfg) => resolveDefaultBlueskyAccountId(cfg as Record<string, unknown>),
-
     isConfigured: (account) => account.configured,
-
     describeAccount: (account) => ({
       accountId: account.accountId,
       name: account.name,
@@ -103,12 +104,10 @@ export const blueskyPlugin: ChannelPlugin<ResolvedBlueskyAccount> = {
       enabled: account.enabled,
       configured: account.configured,
     }),
-
     resolveAllowFrom: ({ cfg, accountId }) =>
       resolveBlueskyAccount(cfg as Record<string, unknown>, accountId).allowFrom.map((entry) =>
         String(entry),
       ),
-
     formatAllowFrom: ({ allowFrom }) =>
       allowFrom
         .map((entry) => String(entry).trim())
@@ -190,12 +189,6 @@ export const blueskyPlugin: ChannelPlugin<ResolvedBlueskyAccount> = {
         abortSignal,
         callbacks: {
           onMessage: async (msg) => {
-            ctx.setStatus({
-              accountId: account.accountId,
-              lastInboundAt: Date.now(),
-              lastEventAt: Date.now(),
-            });
-            // Re-read config each turn so live config changes take effect
             const currentCfg = getBlueskyRuntime().config.loadConfig();
             await dispatchBlueskyInboundTurn({
               account,
