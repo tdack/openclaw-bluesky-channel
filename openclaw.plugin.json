@@ -9,13 +9,33 @@
     "additionalProperties": false,
     "properties": {}
   },
-   "channelConfigs": {
+  "channelConfigs": {
     "bluesky": {
       "label": "Bluesky",
       "schema": {
         "type": "object",
         "additionalProperties": false,
-        "properties": {}
+        "properties": {
+          "handle": { "type": "string", "description": "The user's visible handle." },
+          "appPassword": { "type": "string", "description": "The application password required for API authentication." },
+          "pdsUrl": { "type": "string", "description": "The Public Data Store URL." },
+          "enabled": { "type": "boolean", "description": "Whether the plugin is enabled for the account." },
+          "accounts": {
+            "type": "object",
+            "description": "Account specific settings. Keys map to the accountId.",
+            "patternProperties": {
+              "^[a-zA-Z0-9_-]+$": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "handle": { "type": "string" },
+                  "appPassword": { "type": "string" },
+                  "pdsUrl": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
