@@ -23,6 +23,18 @@
           "appPassword": { "type": "string", "description": "The application password required for API authentication." },
           "pdsUrl": { "type": "string", "description": "The Public Data Store URL." },
           "enabled": { "type": "boolean", "description": "Whether the plugin is enabled for the account." },
+          "name": { "type": "string", "description": "Display name for the default account." },
+          "defaultAccount": { "type": "string", "description": "Explicit default account id used when no accountId is supplied to outbound sends." },
+          "dmPolicy": {
+            "type": "string",
+            "enum": ["pairing", "allowlist", "open", "disabled"],
+            "description": "DM access control policy. Defaults to \"pairing\"."
+          },
+          "allowFrom": {
+            "type": "array",
+            "items": { "type": ["string", "number"] },
+            "description": "Allowed sender handles or DIDs when dmPolicy is \"allowlist\"."
+          },
           "accounts": {
             "type": "object",
             "description": "Account specific settings. Keys map to the accountId.",
@@ -33,7 +45,19 @@
                 "properties": {
                   "handle": { "type": "string" },
                   "appPassword": { "type": "string" },
-                  "pdsUrl": { "type": "string" }
+                  "pdsUrl": { "type": "string" },
+                  "enabled": { "type": "boolean", "description": "Whether this account is enabled." },
+                  "name": { "type": "string", "description": "Display name for this account." },
+                  "dmPolicy": {
+                    "type": "string",
+                    "enum": ["pairing", "allowlist", "open", "disabled"],
+                    "description": "DM access control policy. Defaults to \"pairing\"."
+                  },
+                  "allowFrom": {
+                    "type": "array",
+                    "items": { "type": ["string", "number"] },
+                    "description": "Allowed sender handles or DIDs when dmPolicy is \"allowlist\"."
+                  }
                 }
               }
             }
