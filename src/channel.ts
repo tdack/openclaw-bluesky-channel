@@ -1,30 +1,17 @@
 import type { BskyAgent } from "@atproto/api";
-import {
-  formatPairingApproveHint,
-  type ChannelPlugin,
-} from "openclaw/plugin-sdk/channel-plugin-common";
+import { formatPairingApproveHint, type ChannelPlugin } from "openclaw/plugin-sdk/channel-plugin-common";
 import { buildBaseAccountStatusSnapshot } from "openclaw/plugin-sdk/status-helpers";
-import {
-  listBlueskyAccountIds,
-  resolveBlueskyAccount,
-  resolveDefaultBlueskyAccountId,
-} from "./accounts.js";
+import { resolveDefaultBlueskyAccountId } from "./accounts.js";
 import { evictChatServiceTokens, loginBluesky } from "./auth.js";
+import { normalizeBlueskyId, looksLikeBlueskyId } from "./identifiers.js";
 import { dispatchBlueskyInboundTurn } from "./inbound-turn.js";
 import { runBlueSkyPollLoop } from "./poll.js";
 import { getBlueskyRuntime, setBlueskyRuntime } from "./runtime.js";
 import { sendBlueskyMessage } from "./send.js";
-import { blueskySetupAdapter, blueskySetupWizard } from "./setup-surface.js";
+import { blueskySetupChannelPlugin, CHANNEL_ID } from "./setup-plugin.js";
 import type { ResolvedBlueskyAccount } from "./types.js";
-import {
-  matchesMentionWithExplicit,
-  implicitMentionKindWhen,
-  resolveInboundMentionDecision,
-} from "openclaw/plugin-sdk/channel-inbound";
 
 export { setBlueskyRuntime };
-
-const CHANNEL_ID = "bluesky";
 
 /**
  * Active agents keyed by accountId.
@@ -32,89 +19,8 @@ const CHANNEL_ID = "bluesky";
  */
 const activeAgents = new Map<string, BskyAgent>();
 
-/**
- * Normalize a Bluesky identifier (DID or handle).
- * Strips at://, @, and lowercases handles (DIDs are case-sensitive).
- */
-function normalizeBlueskyId(input: string): string {
-  let cleaned = input
-    .trim()
-    .replace(/^at:\/\//i, "")
-    .replace(/^@/, "");
-  if (!cleaned.startsWith("did:")) {
-    cleaned = cleaned.toLowerCase();
-  }
-  return cleaned;
-}
-
-/**
- * Check if a string looks like a Bluesky identifier (DID or handle).
- */
-function looksLikeBlueskyId(input: string): boolean {
-  const trimmed = input.trim();
-  // DID format: did:plc:xxx or did:web:xxx
-  if (/^did:(plc|web):[a-zA-Z0-9._:%-]+$/.test(trimmed)) {
-    return true;
-  }
-  // Handle format: user.bsky.social or @user.bsky.social (must have at least one dot)
-  if (
-    /^@?[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)+$/.test(
-      trimmed,
-    )
-  ) {
-    return true;
-  }
-  return false;
-}
-
 export const blueskyPlugin: ChannelPlugin<ResolvedBlueskyAccount> = {
-  id: CHANNEL_ID,
-
-  meta: {
-    id: CHANNEL_ID,
-    label: "Bluesky",
-    selectionLabel: "Bluesky (DMs)",
-    detailLabel: "Bluesky DM",
-    docsPath: "/channels/bluesky",
-    blurb: "Connect OpenClaw to Bluesky DMs via the AT Protocol chat API.",
-    order: 85,
-  },
-
-  capabilities: {
-    chatTypes: ["direct"],
-    media: false,
-  },
-
-  setupWizard: blueskySetupWizard,
-  setup: blueskySetupAdapter,
-
-  reload: { configPrefixes: [`channels.${CHANNEL_ID}`] },
-
-  config: {
-    listAccountIds: (cfg) => listBlueskyAccountIds(cfg as Record<string, unknown>),
-    resolveAccount: (cfg, accountId) =>
-      resolveBlueskyAccount(cfg as Record<string, unknown>, accountId),
-    defaultAccountId: (cfg) => resolveDefaultBlueskyAccountId(cfg as Record<string, unknown>),
-    isConfigured: (account) => account.configured,
-    describeAccount: (account) => ({
-      accountId: account.accountId,
-      name: account.name,
-      handle: account.handle,
-      pdsUrl: account.pdsUrl,
-      enabled: account.enabled,
-      configured: account.configured,
-    }),
-    resolveAllowFrom: ({ cfg, accountId }) =>
-      resolveBlueskyAccount(cfg as Record<string, unknown>, accountId).allowFrom.map((entry) =>
-        String(entry),
-      ),
-    formatAllowFrom: ({ allowFrom }) =>
-      allowFrom
-        .map((entry) => String(entry).trim())
-        .filter(Boolean)
-        .map((entry) => (entry === "*" ? "*" : normalizeBlueskyId(entry)))
-        .filter(Boolean),
-  },
+  ...blueskySetupChannelPlugin,
 
   pairing: {
     idLabel: "blueskyDid",
