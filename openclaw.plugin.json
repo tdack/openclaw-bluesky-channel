@@ -7,6 +7,13 @@
   "channelEnvVars": {
     "bluesky": ["BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD", "BLUESKY_PDS_URL"]
   },
+  "setup": {
+    "env": {
+      "BLUESKY_HANDLE": { "type": "string", "description": "Bluesky account handle." },
+      "BLUESKY_APP_PASSWORD": { "type": "string", "description": "App password for Bluesky API." },
+      "BLUESKY_PDS_URL": { "type": "string", "description": "PDS URL (defaults to bluesky.social if omitted)." }
+    }
+  },
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
