@@ -20,7 +20,46 @@
         "additionalProperties": false,
         "properties": {
           "handle": { "type": "string", "description": "The user's visible handle." },
-          "appPassword": { "type": "string", "description": "The application password required for API authentication." },
+          "appPassword": {
+            "description": "The application password required for API authentication.",
+            "anyOf": [
+              { "type": "string" },
+              {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": { "type": "string", "const": "env" },
+                      "provider": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$" },
+                      "id": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{0,127}$" }
+                    },
+                    "required": ["source", "provider", "id"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": { "type": "string", "const": "file" },
+                      "provider": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$" },
+                      "id": { "type": "string" }
+                    },
+                    "required": ["source", "provider", "id"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "source": { "type": "string", "const": "exec" },
+                      "provider": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$" },
+                      "id": { "type": "string" }
+                    },
+                    "required": ["source", "provider", "id"],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            ]
+          },
           "pdsUrl": { "type": "string", "description": "The Public Data Store URL." },
           "enabled": { "type": "boolean", "description": "Whether the plugin is enabled for the account." },
           "name": { "type": "string", "description": "Display name for the default account." },
@@ -44,7 +83,45 @@
                 "additionalProperties": false,
                 "properties": {
                   "handle": { "type": "string" },
-                  "appPassword": { "type": "string" },
+                  "appPassword": {
+                    "anyOf": [
+                      { "type": "string" },
+                      {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "source": { "type": "string", "const": "env" },
+                              "provider": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$" },
+                              "id": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{0,127}$" }
+                            },
+                            "required": ["source", "provider", "id"],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "source": { "type": "string", "const": "file" },
+                              "provider": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$" },
+                              "id": { "type": "string" }
+                            },
+                            "required": ["source", "provider", "id"],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "source": { "type": "string", "const": "exec" },
+                              "provider": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$" },
+                              "id": { "type": "string" }
+                            },
+                            "required": ["source", "provider", "id"],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    ]
+                  },
                   "pdsUrl": { "type": "string" },
                   "enabled": { "type": "boolean", "description": "Whether this account is enabled." },
                   "name": { "type": "string", "description": "Display name for this account." },

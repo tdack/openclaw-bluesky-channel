@@ -1,10 +1,12 @@
+import type { SecretInput } from "openclaw/plugin-sdk/secret-input";
+
 export type DmPolicy = "pairing" | "allowlist" | "open" | "disabled";
 
 export type BlueskyChannelConfig = {
   enabled?: boolean;
   name?: string;
   handle?: string;
-  appPassword?: string;
+  appPassword?: SecretInput;
   /** Personal Data Server URL — defaults to https://bsky.social */
   pdsUrl?: string;
   /** Explicit default account id used when no accountId is supplied to outbound sends. */
@@ -20,7 +22,7 @@ export type BlueskyAccountConfig = {
   enabled?: boolean;
   name?: string;
   handle?: string;
-  appPassword?: string;
+  appPassword?: SecretInput;
   pdsUrl?: string;
   dmPolicy?: DmPolicy;
   allowFrom?: Array<string | number>;

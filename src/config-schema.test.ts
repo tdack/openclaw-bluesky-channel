@@ -46,6 +46,35 @@ describe("openclaw.plugin.json bluesky channel config schema", () => {
     expect(result.ok).toBe(true);
   });
 
+  it("accepts a SecretRef object for the top-level appPassword", () => {
+    const result = validate({
+      enabled: true,
+      handle: "testuser.bsky.social",
+      appPassword: { source: "env", provider: "openclaw", id: "BLUESKY_APP_PASSWORD" },
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("accepts a SecretRef object for a per-account appPassword", () => {
+    const result = validate({
+      accounts: {
+        test_account_bluesky: {
+          handle: "testuser.bsky.social",
+          appPassword: { source: "file", provider: "openclaw", id: "bluesky-app-password" },
+        },
+      },
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it("rejects a SecretRef object with an unknown source", () => {
+    const result = validate({
+      handle: "testuser.bsky.social",
+      appPassword: { source: "vault", provider: "openclaw", id: "BLUESKY_APP_PASSWORD" },
+    });
+    expect(result.ok).toBe(false);
+  });
+
   it("rejects an unknown top-level property", () => {
     const result = validate({
       enabled: true,
