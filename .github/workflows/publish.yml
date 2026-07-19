@@ -55,3 +55,11 @@ jobs:
         run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish to ClawHub
+        run: |
+          npm install -g clawhub
+          clawhub login --token "$CLAWHUB_TOKEN"
+          clawhub package publish . --family code-plugin
+        env:
+          CLAWHUB_TOKEN: ${{ secrets.CLAWHUB_TOKEN }}
