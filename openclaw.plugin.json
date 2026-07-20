@@ -4,9 +4,6 @@
   "description": "A channel plugin for the Bluesky social network.",
   "activation": { "onStartup": false },
   "channels": ["bluesky"],
-  "channelEnvVars": {
-    "bluesky": ["BLUESKY_HANDLE", "BLUESKY_APP_PASSWORD", "BLUESKY_PDS_URL"]
-  },
   "configSchema": {
     "type": "object",
     "additionalProperties": false,
