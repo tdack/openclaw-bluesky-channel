@@ -2,6 +2,7 @@
   "id": "bluesky",
   "name": "Bluesky",
   "description": "A channel plugin for the Bluesky social network.",
+  "icon": "./icon.svg",
   "activation": { "onStartup": false },
   "channels": ["bluesky"],
   "setup": {

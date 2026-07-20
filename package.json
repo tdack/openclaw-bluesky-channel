@@ -25,7 +25,8 @@
     "!dist/**/*.test.js",
     "!dist/**/*.test.d.ts",
     "!dist/**/*.test.d.ts.map",
-    "openclaw.plugin.json"
+    "openclaw.plugin.json",
+    "icon.svg"
   ],
   "scripts": {
     "build": "tsc",
@@ -51,6 +52,7 @@
       "./dist/index.js"
     ],
     "setupEntry": "./dist/setup-entry.js",
+    "icon": "./icon.svg",
     "compat": {
       "pluginApi": ">=2026.7.1",
       "minGatewayVersion": "2026.7.1"

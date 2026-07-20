@@ -1,5 +1,16 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- **Manifest:** Added a Bluesky icon (`icon.svg`), referenced from both `openclaw.plugin.json` and `package.json`, and included it in the published npm tarball.
+
+## [2026.7.5] - 2026-07-20
+
+### Fixed
+- **Manifest:** Removed the legacy `channelEnvVars` field entirely; env var support (`BLUESKY_HANDLE`/`BLUESKY_APP_PASSWORD`/`BLUESKY_PDS_URL`) is fully covered by `setup.env`, satisfying ClawHub validation.
+- **CI:** Fixed `pnpm-workspace.yaml` configuration.
+
 ## [2026.7.3] - 2026-07-19
 
 ### Fixed
