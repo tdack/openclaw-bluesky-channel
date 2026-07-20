@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+## [2026.7.6] - 2026-07-20
+
 ### Added
 - **Manifest:** Added a Bluesky icon (`icon.svg`), referenced from both `openclaw.plugin.json` and `package.json`, and included it in the published npm tarball.
 
