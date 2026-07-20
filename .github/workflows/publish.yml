@@ -87,7 +87,7 @@ jobs:
 
           git add package.json CHANGELOG.md
           git commit -m "chore: release v$NEW_VERSION"
-          git tag "v$NEW_VERSION"
+          git tag -a "v$NEW_VERSION" -m "chore: release v$NEW_VERSION"
           echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Push version bump and tag
