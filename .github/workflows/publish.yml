@@ -101,6 +101,7 @@ jobs:
   clawhub-publish:
     needs: release
     permissions:
+      actions: read
       contents: read
       id-token: write
     uses: openclaw/clawhub/.github/workflows/package-publish.yml@ed9c8fdda2119176ba21d33e81823f8de79a6960
