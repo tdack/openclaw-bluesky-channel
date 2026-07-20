@@ -6,6 +6,7 @@
 
 ### Added
 - **Manifest:** Added a Bluesky icon (`icon.svg`), referenced from both `openclaw.plugin.json` and `package.json`, and included it in the published npm tarball.
+- **CI:** Automated changelog enforcement for releases and switched to ClawHub/OpenClaw's `package-publish` reusable workflow for publishing to ClawHub.
 
 ## [2026.7.5] - 2026-07-20
 
